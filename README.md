@@ -1,2 +1,2 @@
 # datanalysis
-critical analysis of a dataset with Matlab. 
+Critical analysis of a dataset with Matlab. 

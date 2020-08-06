@@ -1,27 +1,3 @@
-% data = readmatrix("heart_failure_clinical_records_dataset.csv");
-
-% data(:,7) = round(data(:,7));
-
-% indices = find(data(:,3) > 999);
-% data(indices, :) = [];
-
-% indices = find(data(:,8) > 5);
-% data(indices,:) = [];
-
-%creating a scatter plot between age and platlets count. We can see from
-%the data that people between 45-73(approx) have the highest platlet count.
-%But we can also see from the graph that most of the people have platlet
-%count between 1 to 3.5(approx).
-% scatter(data(:,1), data(:,7));
-
-% cor_matrix = [data(:,13) data(:,3) data(:,9)];
-
-% indices = find(cor_matrix(:,1)==0);
-
-% cor_matrix(indices,:) = [];
-
-%_________________________________________________________________________________________________________________________
-
 %In this project we have data for heart failure patients. some of them died
 %and the others did not. we are presented with different types of data for
 %the said patients e.g. if they had diabetes or not, how old they were, if
@@ -62,6 +38,7 @@ data(indices, :) = [];
 %But we can also see from the graph that most of the people have platlet
 %count between 1 to 3.5(approx).
 scatter(data.age, data.platelets);
+%_______________________________________________________%
 
 
 %we are creating a variable called "cor_matrix" which we will use now and
@@ -96,7 +73,8 @@ ylabel("Age");
 %We did not find any direct relation between age, smoking and the people
 %who died. This data is for people who are dead and the data shows that
 %people who smoked almost lived as long as the people who did not and
-%suffered heart failure. 
+%suffered heart failure.
+%_______________________________________________________%
 
 %Now we are creating a matrix with "death event, age and smoking"
 cor_matrix = [data.DEATH_EVENT data.age data.smoking];
@@ -124,12 +102,12 @@ ylabel("Age");
 
 % ANALYSIS %
 
-%We are using the same table elements but this time we are comparing
+%We used the same table elements but this time we compared
 %smoking to age for the people who are alive. This data shows us that
 %people who did not smoke got to live a bit more than the people who smoked
 %and suffered heart failure. The age group for the data remains somewhat
 %consistent in both instances. 
-
+%_______________________________________________________%
 
 %creating a matrix with smoking and platelet count
 cor_matrix = [data.platelets data.smoking];
@@ -139,6 +117,30 @@ boxchart(cor_matrix(:,2),cor_matrix(:,1))
 xlabel("Smoking(0 = No, 1 = Yes)");
 ylabel("Platelet Count")
 
+% ANALYSIS % 
+% We found interesting results when we compared platelets and smoking.
+% Most of the people who did not smoke had platelet count between 200k to
+% 300k but there were a lot of outliers on the high end and low end. But we
+% did not see any outliers on the low end and very few on the high end for
+% the people who smoked. This shows that smoking effects your creatinine
+% levels and prevents them from increasing and decreasing significantly. 
+%_______________________________________________________%
+
+
+%creating a matrix with age and diabetes
+cor_matrix = [data.age data.diabetes];
+
+%box charting the data.
+boxchart(cor_matrix(:,2),cor_matrix(:,1))
+xlabel("Diabetes (0 = No, 1 = Yes");
+ylabel("Age")
+
+% ANALYSIS %
+%This comparison shows that people who dont have diabetes have a higher age
+%range than the ones who do. This could be because diabetes causes other
+%health problems is also a factor in heart failure. There are a few
+%outliers in people who smoked which were lucky enough to make it long age.
+%_______________________________________________________%
 
 
 %we are creating a box chart here between age and creatinine. We check the
@@ -158,7 +160,7 @@ boxchart(groupAge,data.creatinine_phosphokinase)
 %creatinine as creatinine levels seem consistent in all groups. The only
 %thing that stands out is people between the age of 60 and 80 seem to have
 %lower creatinine levels than the others. 
-
+%_______________________________________________________%
 
 %here we are going to compare age and ejection fraction. We use the same
 %method as before.
@@ -174,4 +176,4 @@ boxchart(groupAge,data.ejection_fraction)
 %increases. We can also see that people between the age of 60 and 70 seem
 %to have the highest fluctuation in their ejection fraction than the other
 %age groups. 
-
+%_______________________________________________________%

@@ -30,7 +30,7 @@
 %Our group will be first cleaning the data to remove the invalid or
 %illogical values. If we find a value in any row invalid we are going to
 %remove the entire row since that data and any respective data can not be
-% used in our analysis.
+%used in our analysis.
 
 %importing the excel data file into matlab. the reason why we used
 %readtable and not readmatrix is because we wanted the column headers and
@@ -56,14 +56,12 @@ indices = find(data.creatinine_phosphokinase > 999);
 data(indices, :) = [];
 
 
-
+% MINI ANALYSIS
 %creating a scatter plot between age and platlets count. We can see from
 %the data that people between 45-73(approx) have the highest platlet count.
 %But we can also see from the graph that most of the people have platlet
 %count between 1 to 3.5(approx).
 scatter(data.age, data.platelets);
-
-
 
 
 %we are creating a variable called "cor_matrix" which we will use now and
@@ -133,5 +131,47 @@ ylabel("Age");
 %consistent in both instances. 
 
 
+%creating a matrix with smoking and platelet count
+cor_matrix = [data.platelets data.smoking];
 
-%_________________________________________________________________
+%box charting the data.
+boxchart(cor_matrix(:,2),cor_matrix(:,1))
+xlabel("Smoking(0 = No, 1 = Yes)");
+ylabel("Platelet Count")
+
+
+
+%we are creating a box chart here between age and creatinine. We check the
+%min and max values of age so that we can categorize the bins accordingly.
+%we give labels to the x axis bins and catergorize the bins in 5. 
+
+min(data.age);
+max(data.age);
+binEdges = 40:15:100;
+bins = {'40s','50s','60s','70s','80s+'};
+groupAge = discretize(data.age,5,"categorical",bins);
+boxchart(groupAge,data.creatinine_phosphokinase)
+
+% ANALYSIS %
+
+%We are unable to make any concrete relation or analysis between age and
+%creatinine as creatinine levels seem consistent in all groups. The only
+%thing that stands out is people between the age of 60 and 80 seem to have
+%lower creatinine levels than the others. 
+
+
+%here we are going to compare age and ejection fraction. We use the same
+%method as before.
+binEdges = 40:15:100;
+bins = {'40s','50s','60s','70s','80s+'};
+groupAge = discretize(data.age,5,"categorical",bins);
+boxchart(groupAge,data.ejection_fraction)
+
+% ANALYSIS % 
+
+%This data is actually more non consistent than before which gives us an
+%idea of comparison. The ejection fraction is increasing as the age
+%increases. We can also see that people between the age of 60 and 70 seem
+%to have the highest fluctuation in their ejection fraction than the other
+%age groups. 
+

@@ -177,3 +177,49 @@ boxchart(groupAge,data.ejection_fraction)
 %to have the highest fluctuation in their ejection fraction than the other
 %age groups. 
 %_______________________________________________________%
+
+%this fetches all the averages for the different non-binary factors that
+%are within the dataset and then we analyze the data of the people that died 
+% by comparing their total averages to those ofliving people and total average to see 
+%which factors are predominantly above average which will indicate a correlation with death  
+
+totalAverages = [mean(data.age) mean(data.creatinine_phosphokinase) mean(data.ejection_fraction) mean(data.high_blood_pressure) mean(data.platelets) mean(data.serum_creatinine) mean(data.serum_sodium)];
+averagesOfDead = [mean(data.age(data.DEATH_EVENT > 0)) mean(data.creatinine_phosphokinase(data.DEATH_EVENT > 0)) mean(data.ejection_fraction(data.DEATH_EVENT > 0)) mean(data.high_blood_pressure(data.DEATH_EVENT > 0)) mean(data.platelets(data.DEATH_EVENT > 0)) mean(data.serum_creatinine(data.DEATH_EVENT > 0)) mean(data.serum_sodium(data.DEATH_EVENT > 0))];
+averagesOfLiving = [mean(data.age(data.DEATH_EVENT == 0)) mean(data.creatinine_phosphokinase(data.DEATH_EVENT == 0)) mean(data.ejection_fraction(data.DEATH_EVENT == 0)) mean(data.high_blood_pressure(data.DEATH_EVENT == 0)) mean(data.platelets(data.DEATH_EVENT == 0)) mean(data.serum_creatinine(data.DEATH_EVENT == 0)) mean(data.serum_sodium(data.DEATH_EVENT == 0))];
+
+plotMat = [totalAverages; averagesOfDead; averagesOfLiving]
+
+
+% average age for men who died, smoked, had diabetes and high blood pressure
+% here, we are considering the sex column has the value of 1 for males
+males = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
+% average age for women who died, smoked, had diabetes and high blood pressure
+% here, we are considering the sex column has the value of 1 for males
+females = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
+
+%same as above but for people who didn't die.
+notDeadMales = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
+notDeadFemales = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
+
+% total count for the people that fall into the categories that we have
+% selected above 
+countMales = sum(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1);
+countFemales =  sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1);
+countNotDeadMales = sum(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0);
+countNotDeadFemales = sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0);
+
+% pie chart for descriptive analysis for the males who died, smoked, had
+% diabetes and high blood pressure in relation to the total number of dead males
+
+allDeadMales = sum(data.sex == 1 & data.DEATH_EVENT == 1)
+pieValues = [sum(data.sex == 1 & data.smoking == 1 & data.DEATH_EVENT == 1) sum(data.sex == 1 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]
+labels = {'males that died and smoked','males that died and had diabetes','males that died and had high blood pressure'};
+pie(pieValues, labels)
+
+% pie chart for descriptive analysis for the females who died, smoked, had
+% diabetes and high blood pressure in relation to the total number of dead females
+
+allDeadFemales = sum(data.sex == 0 & data.DEATH_EVENT == 1)
+pieValues = [sum(data.sex == 0 & data.smoking == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]
+labels = {'Females that died and smoked','Females that died and had diabetes','Females that died and had high blood pressure'};
+pie(pieValues)

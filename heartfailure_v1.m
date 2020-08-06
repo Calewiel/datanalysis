@@ -180,7 +180,7 @@ boxchart(groupAge,data.ejection_fraction)
 
 %this fetches all the averages for the different non-binary factors that
 %are within the dataset and then we analyze the data of the people that died 
-% by comparing their total averages to those ofliving people and total average to see 
+%by comparing their total averages to those ofliving people and total average to see 
 %which factors are predominantly above average which will indicate a correlation with death  
 
 totalAverages = [mean(data.age) mean(data.creatinine_phosphokinase) mean(data.ejection_fraction) mean(data.high_blood_pressure) mean(data.platelets) mean(data.serum_creatinine) mean(data.serum_sodium)];
@@ -190,6 +190,16 @@ averagesOfLiving = [mean(data.age(data.DEATH_EVENT == 0)) mean(data.creatinine_p
 plotMat = [totalAverages; averagesOfDead; averagesOfLiving]
 
 
+% ANALYSIS %
+%We just compared the averages of the original data set for the non binary
+%values with the average of dead and living respectively. We can see that
+%average of the living is actually much lower than the others and their
+%average of the creatinine levels is also lower than the others. This
+%comparison doesnt really give us any information but we wanted to just
+%have averages for reference. 
+%_______________________________________________________%
+
+
 % average age for men who died, smoked, had diabetes and high blood pressure
 % here, we are considering the sex column has the value of 1 for males
 males = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
@@ -197,9 +207,28 @@ males = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & d
 % here, we are considering the sex column has the value of 1 for males
 females = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
 
+% ANALYSIS % 
+%males = 68
+%females = 50
+%this shows that the average of the dead men who smoked, had diabetes and
+%high blood pressure is higher than that of women. This data proves that
+%men with the above mentioned conditions live longer than women with the
+%same conditions. 
+%_______________________________________________________%
+
+
 %same as above but for people who didn't die.
 notDeadMales = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
 notDeadFemales = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
+
+% ANALYSIS %
+%notDeadMales = 68
+%notDeadFemales = 0
+%this data shows that women who smoked, had diabetes and high blood
+%pressure all died in the event of a heart failure where as 68 men survived
+%who had the same conditions. 
+%_______________________________________________________%
+
 
 % total count for the people that fall into the categories that we have
 % selected above 
@@ -208,16 +237,33 @@ countFemales =  sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & dat
 countNotDeadMales = sum(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0);
 countNotDeadFemales = sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0);
 
+% ANALYSIS %
+%countMales = 4
+%countFemales = 1
+%countNotDeadMales = 6
+%countNotDeadFemales = 0
+
+%we calculated the number of males and females who died and had all the
+%binary health conditions in the data set. More males died than females.
+%But also more males survived than females in this data set. Through this
+%we can conclude that the number of males is higher in this data set than
+%women, also that women have a higher mortality rate than men with the
+%above mentioned health conditions. 
+%_______________________________________________________%
+
+
 % pie chart for descriptive analysis for the males who died, smoked, had
-% diabetes and high blood pressure in relation to the total number of dead males
+% diabetes and high blood pressure in relation to the total number of dead
+% males
 
 allDeadMales = sum(data.sex == 1 & data.DEATH_EVENT == 1)
 pieValues = [sum(data.sex == 1 & data.smoking == 1 & data.DEATH_EVENT == 1) sum(data.sex == 1 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]
 labels = {'males that died and smoked','males that died and had diabetes','males that died and had high blood pressure'};
-pie(pieValues, labels)
+pie(pieValues,labels)
 
 % pie chart for descriptive analysis for the females who died, smoked, had
-% diabetes and high blood pressure in relation to the total number of dead females
+% diabetes and high blood pressure in relation to the total number of dead
+% females
 
 allDeadFemales = sum(data.sex == 0 & data.DEATH_EVENT == 1)
 pieValues = [sum(data.sex == 0 & data.smoking == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]

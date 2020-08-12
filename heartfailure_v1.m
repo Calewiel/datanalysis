@@ -38,10 +38,13 @@ data(indices, :) = [];
 
 % MINI ANALYSIS
 % creating a scatter plot between age and platlets count. We can see from
-% the data that people between 45-73(approx) have the highest platlet count.
-% But we can also see from the graph that most of the people have platlet
-% count between 1 to 3.5(approx).
-scatter(data.age, data.platelets);
+% the data that most of the people have platlet count between 1 to 3.5(approx).
+
+subplot(1,2,1)
+scatter(data.age(data.DEATH_EVENT == 1), data.platelets(data.DEATH_EVENT == 1));
+
+subplot(1,2,2)
+scatter(data.age(data.DEATH_EVENT == 0), data.platelets(data.DEATH_EVENT == 0));
 %_______________________________________________________%
 
 
@@ -89,6 +92,33 @@ notDeadNotSmoking = sum(cor_matrix(:,2)==0);
 %_______________________________________________________%
 
 
+% checking the total number of people that died and didn't have have
+% anaemia vs those that did vs number of people currently living with
+% anaemia
+deadAnaemia = sum(data.anaemia == 1 & data.DEATH_EVENT == 1);
+DeadNotAnaemia = sum(data.anaemia == 0 & data.DEATH_EVENT == 1);
+livingAnaemia = sum(data.anaemia == 1 & data.DEATH_EVENT == 0);
+livingNotAnaemia = sum(data.anaemia == 0 & data.DEATH_EVENT == 0);
+p = pie([deadAnaemia DeadNotAnaemia livingAnaemia livingNotAnaemia])
+ptext = findobj(p, 'Type','text');
+percentValue = get(ptext, 'String');
+labels = {'people that died anaemic: ','people that died not anaemic: ','anaemic living people: ', 'living people without anaemia: '};
+percentValue = percentValue.';
+combined = strcat(labels, percentValue);
+ptext(1).String = combined(1);
+ptext(2).String = combined(2);
+ptext(3).String = combined(3);
+ptext(4).String = combined(4);
+
+% ANALYSIS %
+% deadAnaemia = 46
+% DeadNotAnaemia = 50
+% livingAnaemia = 83
+% from this, we can see that, from the data in this dataset, anaemia is 
+% not a factor that contributes to death event because out of the people
+% that died, a lower amount of them had anaemia and there are more living
+% anaemic people than there are dead.
+
 platNotDead = mean(data.platelets(data.DEATH_EVENT == 0));
 platDead = mean(data.platelets(data.DEATH_EVENT == 1));
 
@@ -120,29 +150,49 @@ deadNoDiab =sum(cor_matrix(:,1)==1 & cor_matrix(:,2)==0);
 % we are creating a box chart here between age and creatinine. We check the
 % min and max values of age so that we can categorize the bins accordingly.
 % we give labels to the x axis bins and catergorize the bins in 5. 
-
+subplot(1,2,1)
 min(data.age);
 max(data.age);
 binEdges = 40:15:100;
 bins = {'40s','50s','60s','70s','80s+'};
-groupAge = discretize(data.age,5,"categorical",bins);
-boxchart(groupAge,data.creatinine_phosphokinase)
-
+groupAge = discretize(data.age(data.DEATH_EVENT == 0),5,"categorical",bins);
+boxchart(groupAge,data.creatinine_phosphokinase(data.DEATH_EVENT == 0))
+% running this for the second plot that relates to 
+subplot(1,2,2)
+min(data.age(data.DEATH_EVENT == 1));
+max(data.age(data.DEATH_EVENT == 1));
+binEdges = 40:15:100;
+bins = {'40s','50s','60s','70s','80s+'};
+groupAge = discretize(data.age(data.DEATH_EVENT == 1),5,"categorical",bins);
+boxchart(groupAge,data.creatinine_phosphokinase(data.DEATH_EVENT == 1))
 % ANALYSIS %
 
 % We were trying to figure out what relation is between age and creatinine
 % levels and how it would effect the death event but we were unable to find
-% any substansive change in data within different age groups. Creatinine
+% any substatial change in data within different age groups. Creatinine
 % levels seems to be consistent throughout hence proving that creatinine
-% levels dont increase or decrease with age. 
+% levels dont increase or decrease with age even within the people that
+% died
 %_______________________________________________________%
 
 % here we are going to compare age and ejection fraction. We use the same
 % method as before.
+
+subplot(1,2,1)
+min(data.age);
+max(data.age);
 binEdges = 40:15:100;
 bins = {'40s','50s','60s','70s','80s+'};
-groupAge = discretize(data.age,5,"categorical",bins);
-boxchart(groupAge,data.ejection_fraction)
+groupAge = discretize(data.age(data.DEATH_EVENT == 0),5,"categorical",bins);
+boxchart(groupAge,data.ejection_fraction(data.DEATH_EVENT == 0))
+% running this for the second plot 
+subplot(1,2,2)
+min(data.age(data.DEATH_EVENT == 1));
+max(data.age(data.DEATH_EVENT == 1));
+binEdges = 40:15:100;
+bins = {'40s','50s','60s','70s','80s+'};
+groupAge = discretize(data.age(data.DEATH_EVENT == 1),5,"categorical",bins);
+boxchart(groupAge,data.ejection_fraction(data.DEATH_EVENT == 1))
 
 % ANALYSIS % 
 
@@ -159,7 +209,7 @@ totalAverages = [mean(data.age) mean(data.creatinine_phosphokinase) mean(data.ej
 averagesOfDead = [mean(data.age(data.DEATH_EVENT > 0)) mean(data.creatinine_phosphokinase(data.DEATH_EVENT > 0)) mean(data.ejection_fraction(data.DEATH_EVENT > 0)) mean(data.platelets(data.DEATH_EVENT > 0)) mean(data.serum_creatinine(data.DEATH_EVENT > 0)) mean(data.serum_sodium(data.DEATH_EVENT > 0))];
 averagesOfLiving = [mean(data.age(data.DEATH_EVENT == 0)) mean(data.creatinine_phosphokinase(data.DEATH_EVENT == 0)) mean(data.ejection_fraction(data.DEATH_EVENT == 0)) mean(data.platelets(data.DEATH_EVENT == 0)) mean(data.serum_creatinine(data.DEATH_EVENT == 0)) mean(data.serum_sodium(data.DEATH_EVENT == 0))];
 
-plotMat = [totalAverages; averagesOfDead; averagesOfLiving]
+plotMat = [totalAverages; averagesOfDead; averagesOfLiving];
 
 
 % ANALYSIS %
@@ -178,10 +228,10 @@ plotMat = [totalAverages; averagesOfDead; averagesOfLiving]
 
 % average age for men who died, smoked, had diabetes and high blood pressure
 % here, we are considering the sex column has the value of 1 for males
-males = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
+males = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1));
 % average age for women who died, smoked, had diabetes and high blood pressure
 % here, we are considering the sex column has the value of 1 for males
-females = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1))
+females = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1));
 
 % ANALYSIS % 
 % males = 68
@@ -194,8 +244,8 @@ females = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 &
 
 
 % same as above but for people who didn't die.
-notDeadMales = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
-notDeadFemales = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0))
+notDeadMales = mean(data.age(data.sex == 1 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0));
+notDeadFemales = mean(data.age(data.sex == 0 & data.smoking == 1 & data.diabetes == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 0));
 
 % ANALYSIS %
 % notDeadMales = 68
@@ -224,7 +274,10 @@ countNotDeadFemales = sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1
 % But also more males survived than females in this data set. Through this
 % we can conclude that the number of males is higher in this data set than
 % women, also that women have a higher mortality rate than men with the
-% above mentioned health conditions. 
+% above mentioned health conditions. Due to the fact that the total number
+% of men in this dataset dwarfs the total number of women, it would skew
+% the analysis of the dataset for specific factors affecting the different 
+% genders.
 %_______________________________________________________%
 
 
@@ -232,16 +285,58 @@ countNotDeadFemales = sum(data.sex == 0 & data.smoking == 1 & data.diabetes == 1
 % diabetes and high blood pressure in relation to the total number of dead
 % males
 
-allDeadMales = sum(data.sex == 1 & data.DEATH_EVENT == 1)
-pieValues = [sum(data.sex == 1 & data.smoking == 1 & data.DEATH_EVENT == 1) sum(data.sex == 1 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]
+allDeadMales = sum(data.sex == 1 & data.DEATH_EVENT == 1);
+pieValues = [sum(data.sex == 1 & data.smoking == 1 & data.DEATH_EVENT == 1) sum(data.sex == 1 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 1 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)];
 labels = {'males that died and smoked','males that died and had diabetes','males that died and had high blood pressure'};
 pie(pieValues,labels)
 
 % pie chart for descriptive analysis for the females who died, smoked, had
 % diabetes and high blood pressure in relation to the total number of dead
-% females
+% females 
 
-allDeadFemales = sum(data.sex == 0 & data.DEATH_EVENT == 1)
-pieValues = [sum(data.sex == 0 & data.smoking == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)]
+allDeadFemales = sum(data.sex == 0 & data.DEATH_EVENT == 1);
+pieValues = [sum(data.sex == 0 & data.smoking == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.diabetes == 1 & data.DEATH_EVENT == 1)  sum(data.sex == 0 & data.high_blood_pressure == 1 & data.DEATH_EVENT == 1)];
 labels = {'Females that died and smoked','Females that died and had diabetes','Females that died and had high blood pressure'};
-pie(pieValues)
+pie(pieValues, labels);
+
+ 
+
+% CONCLUSIVE ANALYSIS
+% In attempting to answer our main question "what factors contribute to
+% death in the event of heart failure" within this dataset,
+% 
+% -1st: we first tried to find correlation between smoking and death in which we discovered that
+% people who died and did not smoke are higher in number than people who
+% died and smoked.
+% 
+% -2nd: we tried to find whether the amount of platelets in people
+% who had heart failure correlates with the event of death. We found out
+% that the platelet count did not have any effect on death. 
+% 
+% -3rd: we worked on diabetes by comparing the number of people who
+% died with the number of living in relation to whether or not they had diabetes. We
+% discovered that the people who have heart failure have the same
+% probability of dying regardless of whether or not they have diabetes.
+%
+% -4th: we compared the creatinine and ejection fraction levels to age in
+% order to figure out if there is any direct relation between age,
+% creatinine and ejection fraction levels for dead and living people. As
+% you can see from the charts people who died seemed to have lower
+% creatinine levels than those of alive people. People who are alive also
+% had more outliers on the top end as compared to dead people. We can
+% easily conclude from this that if someone has high creatinine levels they
+% are more likely to survive the heart failure. As for the ejection
+% fraction, the results are flipped. The dead hadejection fraction levels 
+% with more fluctuation. The highs and lows of dead people are more towards
+% the higher and lower end of the graphs. We can conclude that having a
+% stable ejection fraction will help survive the heart failure.
+%
+% -5th: We just compared the averages of the original data set for the non binary
+% values with the average of dead and living respectively. We can see that
+% average of the living is actually much lower than the others and their
+% average of the creatinine levels is also lower than the others. We also
+% noticed that the average age of the dead is higher than that of the
+% living. The one main significant difference is in serum creatinine(SC). The
+% people who died seem to have a 50% higher SC than the one who are living.
+% This shows us that high SC is likely a direct factor for causing a death
+% event if heart failure happens.

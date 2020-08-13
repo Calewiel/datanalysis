@@ -37,8 +37,12 @@ data(indices, :) = [];
 
 
 % MINI ANALYSIS
-% creating a scatter plot between age and platlets count. We can see from
-% the data that most of the people have platlet count between 1 to 3.5(approx).
+% we can see from the scatter plot that the people who are alive have a
+% more stable platelet count than the people who are dead. We also noticed
+% that the younger people in the data set and are alive have a more stable
+% platelet count than the others. this proves that if you are have a more
+% stable platelet count, it is unlikely that you will die in the event of a
+% heart failure. 
 
 subplot(1,2,1)
 scatter(data.age(data.DEATH_EVENT == 1), data.platelets(data.DEATH_EVENT == 1));
@@ -326,7 +330,7 @@ pie(pieValues, labels);
 % had more outliers on the top end as compared to dead people. We can
 % easily conclude from this that if someone has high creatinine levels they
 % are more likely to survive the heart failure. As for the ejection
-% fraction, the results are flipped. The dead hadejection fraction levels 
+% fraction, the results are flipped. The dead had ejection fraction levels 
 % with more fluctuation. The highs and lows of dead people are more towards
 % the higher and lower end of the graphs. We can conclude that having a
 % stable ejection fraction will help survive the heart failure.
@@ -340,3 +344,38 @@ pie(pieValues, labels);
 % people who died seem to have a 50% higher SC than the one who are living.
 % This shows us that high SC is likely a direct factor for causing a death
 % event if heart failure happens.
+%
+% -6th: we calculated the number of males and females who died and had all the
+% binary health conditions in the data set. More males died than females.
+% But also more males survived than females in this data set. Through this
+% we can conclude that the number of males is higher in this data set than
+% women, also that women have a higher mortality rate than men with the
+% above mentioned health conditions. Due to the fact that the total number
+% of men in this dataset dwarfs the total number of women, it would skew
+% the analysis of the dataset for specific factors affecting the different 
+% genders.
+%
+% Our findings from the analysis: 
+% 
+%
+% - Smoking does not contribute to the death event in the presence of a
+% heart failure. 
+% 
+% - Platelet count does not have a direct relation with death but if
+% someone has a stable platelet count, then they are less likely to die
+% from a heart failure. 
+% 
+% - Diabetes does not have a direct relation with death event if a heart
+% failure happens.
+% 
+% - People with more stable creatinine and ejection fraction levels have a
+% much higher chance to survive the heart failure than those with more
+% fluctuating creatinine and ejection fraction levels. 
+% 
+% - High serum creatinine does have a direct relation with death event.
+% Having a lower SC means that person is more likely to survive the death
+% event when heart failure happens. 
+% 
+% - Number of males is almost double in this data set. Also women have a
+% higher mortality rate than men in this data set. Women with pre existing
+% conditions are more than likely to die if a heart failure happens. 
